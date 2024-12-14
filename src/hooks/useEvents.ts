@@ -9,7 +9,7 @@ import { saveAs } from 'file-saver';
 const useEvents = () => {
   const [events, setEvents] = useState<EventsState>({});
   const [eventsByDate, setEventsByDate] = useState<EventsByDate>({});
-  const [isLoading, setIsLoading] = useState(false);
+  const [_, setIsLoading] = useState(false);
   useEffect(() => {
     const storedEvents = localStorage.getItem('events');
     // console.log(storedEvents);
