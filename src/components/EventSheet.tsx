@@ -69,13 +69,11 @@ const EventSheet: React.FC<EventSheetProps> = ({
     const endDateTime = dayjs(`${defaultDate}T${newEvent.end}`);
 
     if (newEvent.title && newEvent.start && newEvent.end) {
-      // Checking if the ending timing of an event is before than the starting time;
       if (endDateTime.isBefore(startDateTime)) {
         alert("End time cannot be before start time");
         return;
       }
 
-      // Checking overlapping event i.e if 2 two events collide in timings
       const overlappingEvent = events.find((event) => {
         const eventStartDateTime = dayjs(`${defaultDate}T${event.start}`);
         const eventEndDateTime = dayjs(`${defaultDate}T${event.end}`);
@@ -115,38 +113,40 @@ const EventSheet: React.FC<EventSheetProps> = ({
 
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
-      <SheetContent className="w-[400px] sm:w-[540px]">
-        <SheetHeader className="mb-6">
-          <SheetTitle className="text-2xl font-semibold">
+      <SheetContent className="w-full sm:w-[400px] md:w-[540px] p-4 sm:p-6">
+        <SheetHeader className="mb-4 sm:mb-6">
+          <SheetTitle className="text-xl sm:text-2xl font-semibold">
             {selectedDate.format("MMMM D, YYYY")}
           </SheetTitle>
         </SheetHeader>
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col h-full max-h-[calc(100vh-4rem)]">
           <Input
             placeholder="Search events..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="mb-4"
           />
-          <div className="mt-6 border-t pt-4">
-            <h3 className="text-lg font-semibold mb-4">
+          <div className="mt-4 sm:mt-6 border-t pt-4">
+            <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">
               {editingEvent ? "Edit Event" : "Add New Event"}
             </h3>
-            <div className="space-y-4">
+            <div className="space-y-3 sm:space-y-4">
               <Input
                 placeholder="Event Title"
                 value={newEvent.title}
                 onChange={(e) =>
                   setNewEvent({ ...newEvent, title: e.target.value })
                 }
+                className="text-sm sm:text-base"
               />
-              <div className="flex space-x-2">
+              <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
                 <Input
                   type="time"
                   value={newEvent.start}
                   onChange={(e) =>
                     setNewEvent({ ...newEvent, start: e.target.value })
                   }
+                  className="flex-1 text-sm sm:text-base"
                 />
                 <Input
                   type="time"
@@ -154,6 +154,7 @@ const EventSheet: React.FC<EventSheetProps> = ({
                   onChange={(e) =>
                     setNewEvent({ ...newEvent, end: e.target.value })
                   }
+                  className="flex-1 text-sm sm:text-base"
                 />
               </div>
               <Textarea
@@ -162,6 +163,7 @@ const EventSheet: React.FC<EventSheetProps> = ({
                 onChange={(e) =>
                   setNewEvent({ ...newEvent, description: e.target.value })
                 }
+                className="text-sm sm:text-base min-h-[80px] sm:min-h-[100px]"
               />
               <Select
                 value={newEvent.type}
@@ -169,7 +171,7 @@ const EventSheet: React.FC<EventSheetProps> = ({
                   setNewEvent({ ...newEvent, type: value as Event["type"] })
                 }
               >
-                <SelectTrigger>
+                <SelectTrigger className="text-sm sm:text-base">
                   <SelectValue placeholder="Event Type" />
                 </SelectTrigger>
                 <SelectContent>
@@ -185,7 +187,7 @@ const EventSheet: React.FC<EventSheetProps> = ({
             </div>
           </div>
 
-          <div className="flex-1 overflow-y-auto space-y-4 pt-8">
+          <div className="flex-1 overflow-y-auto space-y-3 sm:space-y-4 pt-6 sm:pt-8 mt-4">
             {filteredEvents.map((event) => (
               <EventItem
                 key={event.id}
@@ -198,7 +200,7 @@ const EventSheet: React.FC<EventSheetProps> = ({
               />
             ))}
           </div>
-          <div className="pb-10"></div>
+          <div className="pb-6 sm:pb-10"></div>
         </div>
       </SheetContent>
     </Sheet>
@@ -223,7 +225,7 @@ const EventItem: React.FC<EventItemProps> = ({ event, onEdit, onDelete }) => {
   return (
     <div
       ref={drag}
-      className={`p-3 border rounded-lg ${
+      className={`p-2 sm:p-3 border rounded-lg ${
         event.type === "personal"
           ? "bg-green-100 border-green-300"
           : event.type === "work"
@@ -233,20 +235,26 @@ const EventItem: React.FC<EventItemProps> = ({ event, onEdit, onDelete }) => {
           : "bg-gray-100 border-gray-300"
       } ${isDragging ? "opacity-50" : ""}`}
     >
-      <h4 className="font-semibold text-2xl mb-1">{event.title}</h4>
-      <p className="text-base text-gray-600 mb-1">
+      <h4 className="font-semibold text-lg sm:text-2xl mb-1">{event.title}</h4>
+      <p className="text-sm sm:text-base text-gray-600 mb-1">
         {event.start} - {event.end}
       </p>
-      <p className="text-base mb-2">{event.description}</p>
+      <p className="text-sm sm:text-base mb-2">{event.description}</p>
       <div className="flex justify-end space-x-2">
         <Button
           variant="outline"
           size="sm"
           onClick={() => onEdit(event.id, event)}
+          className="text-xs sm:text-sm"
         >
           Edit
         </Button>
-        <Button variant="outline" size="sm" onClick={onDelete}>
+        <Button 
+          variant="outline" 
+          size="sm" 
+          onClick={onDelete}
+          className="text-xs sm:text-sm"
+        >
           Delete
         </Button>
       </div>
